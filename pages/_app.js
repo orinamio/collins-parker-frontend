@@ -1,15 +1,11 @@
 import React from 'react';
 import App, { Container } from 'next/app';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider } from '@apollo/react-common';
 import { ThemeProvider } from 'styled-components';
 
+import { GlobalStyle } from '../configs/style';
 import withApolloClient from '../api/withApolloClient';
-
-const theme = {
-  colors: {
-    primary: '#000000'
-  }
-};
+import theme from '../theme';
 
 class MyApp extends App {
   render() {
@@ -21,6 +17,7 @@ class MyApp extends App {
             <Component {...pageProps} />
           </ThemeProvider>
         </ApolloProvider>
+        <GlobalStyle />
       </Container>
     );
   }

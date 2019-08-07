@@ -1,24 +1,18 @@
-import { useRouter } from 'next/router';
+// @flow
+import * as React from 'react';
+import Link from 'next/link';
 
-export default function ActiveLink({ children, href }) {
-  const router = useRouter();
-  const style = {
-    marginRight: 10,
-    color: router.pathname === href ? 'red' : 'black'
-  };
+type Props = {
+  children: React.Node,
+  href: string,
+  passHref?: boolean,
+  role?: string
+};
 
-  useEffect(() => {
-    router.prefetch(href);
-  });
-
-  const handleClick = e => {
-    e.preventDefault();
-    () => setTimeout(() => router.push(href), 100);
-  };
-
+export default ({ children, href, ...props }: Props) => {
   return (
-    <a href={href} onClick={handleClick} style={style}>
+    <Link href={href} passHref {...props}>
       {children}
-    </a>
+    </Link>
   );
-}
+};

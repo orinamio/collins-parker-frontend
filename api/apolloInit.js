@@ -17,16 +17,15 @@ let apolloClient;
 const isBrowser = typeof window !== 'undefined';
 
 const errorLink = onError(({ networkError }) => {
-  if (networkError.statusCode === 401) {
-    isBrowser && localStorage.clear();
-  }
+  // if (networkError.statusCode === 401) {
+  //   isBrowser &&  [do something]
+  // }
 });
 
 const authLink = new ApolloLink((operation, forward) => {
   const { headers } = operation.getContext();
   operation.setContext({
     headers: {
-      Authorization: `Bearer ${localStorage.getItem(token)}`,
       ...headers
     }
   });
@@ -39,19 +38,11 @@ const httpLink = new HttpLink({
 });
 
 const wsClient = isBrowser
-  ? new SubscriptionClient(apiConfig.graphqlWsEndpoint, {
-      reconnect: true,
-      connectionParams: {
-        authToken: isBrowser && localStorage.getItem('token')
-      }
-    })
+  ? new SubscriptionClient(apiConfig.graphqlWsEndpoint, { reconnect: true })
   : new SubscriptionClient(
       apiConfig.graphqlWsEndpoint,
       {
-        reconnect: true,
-        connectionParams: {
-          authToken: isBrowser && localStorage.getItem('token')
-        }
+        reconnect: true
       },
       ws
     );
@@ -83,13 +74,10 @@ function createClient(initialState) {
 }
 
 export default function initApolloClient(initialState) {
-  // create a new client for every new connection to avoid
-  // accross multiple connections
   if (!isBrowser) {
     return createClient(initialState);
   }
 
-  // Reuse client on the client-side
   if (!apolloClient) {
     apolloClient = createClient(initialState);
   }

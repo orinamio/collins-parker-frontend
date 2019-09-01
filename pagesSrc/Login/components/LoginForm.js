@@ -28,7 +28,7 @@ export default function LoginForm() {
     }
     if (loginResult.data && loginResult.data.login) {
       cookie.set('token', loginResult.data.login.token);
-      router.push('/account');
+      router.back();
       setLoginState(true);
     }
   }, [loginResult, router, setLoginState]);
